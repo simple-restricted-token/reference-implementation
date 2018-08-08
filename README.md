@@ -5,7 +5,7 @@ An Interface and Reference Implementation of the `ERC-XXX` Simple Restricted Tok
 * `master` — \<circleci badge> \<codecoverage badge>
 
 ## Status
-An `ERC-XXX` token is an `ERC-20` compatible token that provides a standardized interface for issuing tokens with transfer restrictions.
+An `ERC-XXX` token is an `ERC-20` compatible token that posits a standardized interface for issuing tokens with transfer restrictions.
 
 ## Development
 Clone the repository  
