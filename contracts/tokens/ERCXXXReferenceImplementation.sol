@@ -15,14 +15,13 @@ import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
  * `decimals` - for use by wallets and exchanges
  * `totalSupply` - for use by wallets and exchanges 
  *
- * The implementation MUST take care to implmement desired
+ * The implementation MUST take care to implement desired
  * transfer restriction logic correctly.
  */
 
 /// @title Reference implementation for the ERC-XXX token
 /// @author TokenSoft Inc
 /// @dev Ref https://github.com/ethereum/EIPs/pull/XXX
-/// @notice An ERC-20 
 contract ERCXXXReferenceImplementation is ERCXXX, StandardToken {
     /// @notice 0 is the reserved restrictionCode returned when there are no detected transfer restrictions
     uint constant SUCCESS_CODE = 0;
