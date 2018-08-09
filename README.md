@@ -1,8 +1,8 @@
-# SRS20 Reference Implementation
+# SRS-20 Reference Implementation
 An Interface and Reference Implementation of the `SRS-20` Simple Restricted Token Standard.
 
-* `develop` — \<circleci badge> \<codecoverage badge>
-* `master` — \<circleci badge> \<codecoverage badge>
+<!-- * `develop` — \<circleci badge> \<codecoverage badge>
+* `master` — \<circleci badge> \<codecoverage badge> -->
 
 ## Status
 An `SRS-20` token is an `ERC-20` compatible token that posits a standardized interface for issuing tokens with transfer restrictions.
