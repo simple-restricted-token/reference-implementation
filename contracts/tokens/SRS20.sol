@@ -27,6 +27,6 @@ contract SRS20 is ERC20 {
         address indexed from,
         address indexed to,
         uint256 value,
-        uint8 restrictionCode
+        uint8 indexed restrictionCode
     );
 }

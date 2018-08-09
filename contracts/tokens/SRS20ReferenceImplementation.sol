@@ -20,15 +20,21 @@ import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
  */
 
 /// @title Reference implementation for the SRS-20 token
+/// @notice This implementation has a transfer restriction that prevents token holders from sending to the zero address
 /// @author TokenSoft Inc
 /// @dev Ref https://github.com/ethereum/EIPs/pull/SRS
 contract SRS20ReferenceImplementation is SRS20, StandardToken {
-    /// @notice Checks if a transfer is restricted, reverts if so
+    /// @notice Restriction codes as constant variables
+    /// @dev Holding restriction codes as constants is not required by the standard
+    uint8 constant SUCCESS_CODE = 0;
+    uint8 constant ZERO_ADDRESS_RESTRICTION_CODE = 1;
+
+    /// @notice Checks if a transfer is restricted, emits TransferRestricted event and reverts if it is
     /// @param from Sending address
     /// @param to Receiving address
     /// @param value Amount of tokens being transferred
-    /// @dev Defining this modifier is not for the standard, but purely for the ref implementation
-    modifier onlyLawfulTransfer (address from, address to, uint256 value) {
+    /// @dev Defining this modifier is not required by the standard, using detectTransferRestriction and appropriately emitting TransferRestricted is however
+    modifier notRestricted (address from, address to, uint256 value) {
         uint restrictionCode = detectTransferRestriction(from, to, value);
         bool restrictionDetected = restrictionCode != SUCCESS_CODE;
         if (restrictionDetected) {
@@ -45,12 +51,13 @@ contract SRS20ReferenceImplementation is SRS20, StandardToken {
     /// @return Code by which to reference message for rejection reasoning
     /// @dev Overwrite with your custom transfer restriction logic
     function detectTransferRestriction (address from, address to, uint256 value)
-        public view returns (uint restrictionCode)
+        public view returns (uint8)
     {
-        restrictionCode = 0; // success
+        uint8 restrictionCode = SUCCESS_CODE; // success
         if (to == address(0x0)) {
-            restrictionCode = 1; // illegal transfer to zero address
+            restrictionCode = ZERO_ADDRESS_RESTRICTION_CODE; // illegal transfer to zero address
         }
+        return restrictionCode;
     }
 
     /// @notice Detects if a transfer will be reverted and if so returns an appropriate reference code
@@ -60,24 +67,24 @@ contract SRS20ReferenceImplementation is SRS20, StandardToken {
     /// @return Code by which to reference message for rejection reasoning
     /// @dev Overwrite with your custom message and restrictionCode handling
     function messageForTransferRestriction (uint restrictionCode)
-        public view returns (string message)
+        public view returns (string)
     {
-        if (restrictionCode == 0) {
+        string message = "UNKNOWN";
+        if (restrictionCode == SUCCESS_CODE) {
             message = "SUCCESS";
-        } else if (restrictionCode == 1) {
+        } else if (restrictionCode == ZERO_ADDRESS_RESTRICTION_CODE) {
             message = "ILLEGAL_TRANSFER_TO_ZERO_ADDRESS";
-        } else {
-            message = "ILLEGAL_UNKNOWN";
         }
+        return message;
     }
 
     /// @notice Subclass implementation of StandardToken's ERC20 transfer method
     /// @param to Receiving address
     /// @param value Amount of tokens being transferred
     /// @return Transfer success status
-    /// @dev Must compare the return value of detectTransferRestriction to succes code (0)
+    /// @dev Must compare the return value of detectTransferRestriction to 0
     function transfer (address to, uint256 value)
-        public onlyLawfulTransfer(msg.sender, to, value) returns (bool)
+        public notRestricted(msg.sender, to, value) returns (bool)
     {
         return super.transfer(to, value);
     }
@@ -87,9 +94,9 @@ contract SRS20ReferenceImplementation is SRS20, StandardToken {
     /// @param to Receiving address
     /// @param value Amount of tokens being transferred
     /// @return Transfer success status
-    /// @dev Must compare the return value of detectTransferRestriction to success code (0)
+    /// @dev Must compare the return value of detectTransferRestriction to 0
     function transferFrom (address from, address to, uint256 value)
-        public onlyLawfulTransfer(from, to, value) returns (bool)
+        public notRestricted(from, to, value) returns (bool)
     {
         return super.transferFrom(from, to, value);
     }
