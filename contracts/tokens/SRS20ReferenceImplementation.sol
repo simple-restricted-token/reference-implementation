@@ -1,5 +1,5 @@
 pragma solidity ^0.4.24;
-import "./ERCXXX.sol";
+import "./SRS20.sol";
 import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 
 /**
@@ -19,25 +19,23 @@ import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
  * transfer restriction logic correctly.
  */
 
-/// @title Reference implementation for the ERC-XXX token
+/// @title Reference implementation for the SRS-20 token
 /// @author TokenSoft Inc
-/// @dev Ref https://github.com/ethereum/EIPs/pull/XXX
-contract ERCXXXReferenceImplementation is ERCXXX, StandardToken {
-    /// @notice 0 is the reserved restrictionCode returned when there are no detected transfer restrictions
-    uint constant SUCCESS_CODE = 0;
-
-    /// @notice Detects if a transfer will be reverted and if so returns an appropriate reference code
+/// @dev Ref https://github.com/ethereum/EIPs/pull/SRS
+contract SRS20ReferenceImplementation is SRS20, StandardToken {
+    /// @notice Checks if a transfer is restricted, reverts if so
     /// @param from Sending address
     /// @param to Receiving address
     /// @param value Amount of tokens being transferred
-    /// @return Code by which to reference message for rejection reasoning
-    /// @dev Override with your custom transfer restriction logic
-    function detectTransferRestriction (address from, address to, uint value)
-        public
-        view
-        returns (uint restrictionCode)
-    {
-        /* ... */
+    /// @dev Defining this modifier is not for the standard, but purely for the ref implementation
+    modifier onlyLawfulTransfer (address from, address to, uint256 value) {
+        uint restrictionCode = detectTransferRestriction(from, to, value);
+        bool restrictionDetected = restrictionCode != SUCCESS_CODE;
+        if (restrictionDetected) {
+            emit TransferRestricted(from, to, value, restrictionCode);
+            revert(messageForTransferRestriction(restrictionCode));
+        }
+        _;
     }
 
     /// @notice Detects if a transfer will be reverted and if so returns an appropriate reference code
@@ -45,13 +43,32 @@ contract ERCXXXReferenceImplementation is ERCXXX, StandardToken {
     /// @param to Receiving address
     /// @param value Amount of tokens being transferred
     /// @return Code by which to reference message for rejection reasoning
-    /// @dev Override with your custom message and restrictionCode handling
-    function messageForTransferRestriction (uint restrictionCode)
-        public
-        view
-        returns (string message)
+    /// @dev Overwrite with your custom transfer restriction logic
+    function detectTransferRestriction (address from, address to, uint256 value)
+        public view returns (uint restrictionCode)
     {
-        /* ... */
+        restrictionCode = 0; // success
+        if (to == address(0x0)) {
+            restrictionCode = 1; // illegal transfer to zero address
+        }
+    }
+
+    /// @notice Detects if a transfer will be reverted and if so returns an appropriate reference code
+    /// @param from Sending address
+    /// @param to Receiving address
+    /// @param value Amount of tokens being transferred
+    /// @return Code by which to reference message for rejection reasoning
+    /// @dev Overwrite with your custom message and restrictionCode handling
+    function messageForTransferRestriction (uint restrictionCode)
+        public view returns (string message)
+    {
+        if (restrictionCode == 0) {
+            message = "SUCCESS";
+        } else if (restrictionCode == 1) {
+            message = "ILLEGAL_TRANSFER_TO_ZERO_ADDRESS";
+        } else {
+            message = "ILLEGAL_UNKNOWN";
+        }
     }
 
     /// @notice Subclass implementation of StandardToken's ERC20 transfer method
@@ -59,14 +76,10 @@ contract ERCXXXReferenceImplementation is ERCXXX, StandardToken {
     /// @param value Amount of tokens being transferred
     /// @return Transfer success status
     /// @dev Must compare the return value of detectTransferRestriction to succes code (0)
-    function transfer (address to, uint value)
-        public
-        returns (bool success)
+    function transfer (address to, uint256 value)
+        public onlyLawfulTransfer(msg.sender, to, value) returns (bool)
     {
-        uint restrictionCode = detectTransferRestriction(msg.sender, to, value);
-        string message = messageForTransferRestriction(restrictionCode);
-        require(restrictionCode == SUCCESS_CODE, message);
-        success = super.transfer(to, value);
+        return super.transfer(to, value);
     }
   
     /// @notice Subclass implementation of StandardToken's ERC20 transferFrom method
@@ -75,13 +88,9 @@ contract ERCXXXReferenceImplementation is ERCXXX, StandardToken {
     /// @param value Amount of tokens being transferred
     /// @return Transfer success status
     /// @dev Must compare the return value of detectTransferRestriction to success code (0)
-    function transferFrom (address from, address to, uint value)
-        public
-        returns (bool success)
+    function transferFrom (address from, address to, uint256 value)
+        public onlyLawfulTransfer(from, to, value) returns (bool)
     {
-        uint restrictionCode = detectTransferRestriction(msg.sender, to, value);
-        string message = messageForTransferRestriction(restrictionCode);
-        require(restrictionCode == SUCCESS_CODE, message);
-        success = super.transferFrom(from, to, value);
+        return super.transferFrom(from, to, value);
     }
 }
