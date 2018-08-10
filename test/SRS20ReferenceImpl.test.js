@@ -91,7 +91,7 @@ contract('SRS20ReferenceImpl', ([sender, recipient, ...accounts]) => {
   })
   
   it('should return success message for success code', async () => {
-    const message = await token.messageForTransferRestriction(SUCCESS_CODE);
+    const message = await token.messageForTransferRestriction(SUCCESS_CODE)
     assert.equal(SUCCESS_MESSAGE, message)
   })
 
