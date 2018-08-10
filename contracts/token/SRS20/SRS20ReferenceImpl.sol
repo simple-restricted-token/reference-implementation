@@ -40,10 +40,7 @@ contract SRS20ReferenceImpl is SRS20, StandardToken {
     /// @dev Defining this modifier is not required by the standard, using detectTransferRestriction and appropriately emitting TransferRestricted is however
     modifier notRestricted (address from, address to, uint256 value) {
         uint8 restrictionCode = detectTransferRestriction(from, to, value);
-        bool restrictionDetected = restrictionCode != SUCCESS_CODE;
-        if (restrictionDetected) {
-            revert(messageForTransferRestriction(restrictionCode));
-        }
+        require(restrictionCode == SUCCESS_CODE, messageForTransferRestriction(restrictionCode));
         _;
     }
 
