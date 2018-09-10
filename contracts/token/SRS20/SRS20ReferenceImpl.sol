@@ -21,7 +21,6 @@ import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 
 /// @title Reference implementation for the SRS-20 token
 /// @notice This implementation has a transfer restriction that prevents token holders from sending to the zero address
-/// @author TokenSoft Inc
 /// @dev Ref https://github.com/ethereum/EIPs/pull/SRS
 contract SRS20ReferenceImpl is SRS20, StandardToken {
     /// @notice Restriction codes and messages as constant variables
