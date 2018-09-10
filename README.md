@@ -1,5 +1,5 @@
-Reference Implementation
-An Interface and Reference Implementation of the Simple Restricted Token Standard.
+# Reference Implementation
+An interface definition and reference implementation of the Simple Restricted Token Standard.
 
 _You will notice the standard being referred to as **SRS-20** throughout the document. This is for convenience purposes only and is in no way an attempt to brand, copyright, or market the standard._
 
