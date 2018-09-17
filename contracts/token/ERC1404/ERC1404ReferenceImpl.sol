@@ -1,5 +1,5 @@
 pragma solidity ^0.4.24;
-import "./SRS20.sol";
+import "./ERC1404.sol";
 import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 
 /**
@@ -19,10 +19,10 @@ import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
  * transfer restriction logic correctly.
  */
 
-/// @title Reference implementation for the SRS-20 token
+/// @title Reference implementation for the ERC-1404 token
 /// @notice This implementation has a transfer restriction that prevents token holders from sending to the zero address
 /// @dev Ref https://github.com/ethereum/EIPs/pull/SRS
-contract SRS20ReferenceImpl is SRS20, StandardToken {
+contract ERC1404ReferenceImpl is ERC1404, StandardToken {
     /// @notice Restriction codes and messages as constant variables
     /// @dev Holding restriction codes and messages as constants is not required by the standard
     uint8 public constant SUCCESS_CODE = 0;

@@ -1,6 +1,6 @@
-const SRS20ReferenceImplMock = artifacts.require('./mocks/SRS20ReferenceImplMock')
+const ERC1404ReferenceImplMock = artifacts.require('./mocks/ERC1404ReferenceImplMock')
 
-contract('SRS20ReferenceImpl', ([sender, recipient, ...accounts]) => {
+contract('ERC1404ReferenceImpl', ([sender, recipient, ...accounts]) => {
   const initialAccount = sender
   const transferValue = '100000000000000000'
   const initialBalance = '100000000000000000000'
@@ -13,7 +13,7 @@ contract('SRS20ReferenceImpl', ([sender, recipient, ...accounts]) => {
   let ZERO_ADDRESS_RESTRICTION_CODE
   let ZERO_ADDRESS_RESTRICTION_MESSAGE
   before(async () => {
-    token = await SRS20ReferenceImplMock.new(initialAccount, initialBalance)
+    token = await ERC1404ReferenceImplMock.new(initialAccount, initialBalance)
     tokenTotalSupply = await token.totalSupply()
     SUCCESS_CODE = await token.SUCCESS_CODE()
     SUCCESS_MESSAGE = await token.SUCCESS_MESSAGE()

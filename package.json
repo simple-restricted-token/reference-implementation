@@ -2,12 +2,12 @@
   "author": "TokenSoft Inc",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tokensoft/SRS20-reference-implementation.git"
+    "url": "git+https://github.com/tokensoft/ERC1404-reference-implementation.git"
   },
   "bugs": {
-    "url": "https://github.com/tokensoft/SRS20-reference-implementation/issues"
+    "url": "https://github.com/tokensoft/ERC1404-reference-implementation/issues"
   },
-  "homepage": "https://github.com/tokensoft/SRS20-reference-implementation#readme",
+  "homepage": "https://github.com/tokensoft/ERC1404-reference-implementation#readme",
   "license": "MIT",
   "scripts": {
     "test": "truffle test",

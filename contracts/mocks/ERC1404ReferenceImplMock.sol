@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 import "./BasicTokenMock.sol";
-import "../token/SRS20/SRS20ReferenceImpl.sol";
+import "../token/ERC1404/ERC1404ReferenceImpl.sol";
 
-contract SRS20ReferenceImplMock is BasicTokenMock, SRS20ReferenceImpl {
+contract ERC1404ReferenceImplMock is BasicTokenMock, ERC1404ReferenceImpl {
     constructor (address initialAccount, uint256 initialBalance)
       BasicTokenMock(initialAccount, initialBalance)
       public
