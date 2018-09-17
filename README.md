@@ -1,8 +1,6 @@
 # Reference Implementation
 An interface definition and reference implementation of the Simple Restricted Token Standard.
 
-_You will notice the standard being referred to as **ERC-1404** throughout the document. This is for convenience purposes only and is in no way an attempt to brand, copyright, or market the standard._
-
 ## Status
 An `ERC-1404` token is an `ERC-20` compatible token that posits a standardized interface for issuing tokens with transfer restrictions.
 
